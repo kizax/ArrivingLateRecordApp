@@ -1,11 +1,14 @@
 package edu.tcfsh.arrivinglaterecordapp;
 
+import java.util.Date;
+
 public class StudentRecord {
 	private int gradeNum;
 	private int classNum;
 	private int studentId;
 	private String studentName;
 	private int num;
+	private Date date;
 
 	public StudentRecord(int gradeNum, int classNum, int num, int studentId,
 			String studentName) {
@@ -14,6 +17,15 @@ public class StudentRecord {
 		this.num = num;
 		this.studentId = studentId;
 		this.studentName = studentName;
+	
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 
 	public String getStudentNum() {

@@ -20,8 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.example.effectivenavigation.R;
-
+import edu.tcfsh.arrivinglaterecordapp.R;
 import jxl.Cell;
 import jxl.CellType;
 import jxl.LabelCell;
@@ -29,6 +28,8 @@ import jxl.NumberCell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+import jxl.write.WritableSheet;
+import jxl.write.WritableWorkbook;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
@@ -54,7 +55,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener, SearchStudentFragment.OnHeadlineSelectedListener {
+		ActionBar.TabListener, SearchStudentFragment.OnHeadlineSelectedListener, ArrivingLateRecordFragment.OnDeleteSelectedListener {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -67,26 +68,34 @@ public class MainActivity extends FragmentActivity implements
 	AppSectionsPagerAdapter mAppSectionsPagerAdapter;
 	private static ArrayList<StudentRecord> arrivingLateRecordList;
 
-	static ArrivingLateRecordFragment newFragment = new ArrivingLateRecordFragment();
-
 	/**
 	 * The {@link ViewPager} that will display the three primary sections of the
 	 * app, one at a time.
 	 */
 	ViewPager mViewPager;
 
+	private Bundle bundle;
+	private int dayOfMonth;
+	private int month;
+	private int year;
+
+	static ArrivingLateRecordFragment newFragment;
+
 	@Override
 	public void onArticleSelected(StudentRecord s) {
 		// The user selected the headline of an article from the
 		// HeadlinesFragment
 		newFragment.updateList(s);
-		showToast(s.toString() +" 遲到!");
+		showToast(s.toString() + " 遲到!");
 
 	}
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+
+		getBundle();
+		newFragment = new ArrivingLateRecordFragment(dayOfMonth, month, year);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
@@ -138,6 +147,13 @@ public class MainActivity extends FragmentActivity implements
 		}
 
 		arrivingLateRecordList = new ArrayList<StudentRecord>();
+	}
+
+	private void getBundle() {
+		bundle = this.getIntent().getExtras();
+		dayOfMonth = bundle.getInt("DayOfMonth");
+		month = bundle.getInt("Month");
+		year = bundle.getInt("Year");
 	}
 
 	@Override
@@ -319,6 +335,12 @@ public class MainActivity extends FragmentActivity implements
 					public void onClick(DialogInterface arg0, int arg1) {
 					}
 				}).show();
+	}
+
+	@Override
+	public void onDeleteSelected(String msg) {
+		// TODO Auto-generated method stub
+		showToast(msg);
 	}
 
 }

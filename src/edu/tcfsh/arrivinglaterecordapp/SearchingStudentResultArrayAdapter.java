@@ -1,6 +1,7 @@
 package edu.tcfsh.arrivinglaterecordapp;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import android.content.Context;
 import android.util.Log;
@@ -10,9 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.effectivenavigation.R;
-
+import edu.tcfsh.arrivinglaterecordapp.R;
 import edu.tcfsh.arrivinglaterecordapp.SearchStudentFragment.OnHeadlineSelectedListener;
 
 public class SearchingStudentResultArrayAdapter extends
@@ -98,6 +97,7 @@ public class SearchingStudentResultArrayAdapter extends
 				StudentRecord studentRecord = searchResultList.get(pos);
 				Log.d("POS", "ID: " + studentRecord.getStudentId());
 
+				studentRecord.setDate(new Date());
 				arrivingLateRecordList.add(studentRecord);
 
 				notifyDataSetChanged();

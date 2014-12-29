@@ -16,7 +16,7 @@
 
 package edu.tcfsh.arrivinglaterecordapp;
 
-import com.example.effectivenavigation.R;
+import edu.tcfsh.arrivinglaterecordapp.R;
 
 import android.app.ActionBar;
 import android.content.Intent;

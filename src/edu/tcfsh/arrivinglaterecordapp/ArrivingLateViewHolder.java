@@ -5,6 +5,8 @@ import android.widget.TextView;
 
 public class ArrivingLateViewHolder {
 
+	TextView timeText;
+	
 	TextView gradeText;
 	TextView classText;
 	TextView numText;

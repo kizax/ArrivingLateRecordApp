@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import com.example.effectivenavigation.R;
+import edu.tcfsh.arrivinglaterecordapp.R;
 
 import jxl.Cell;
 import jxl.CellType;
@@ -74,6 +74,8 @@ public class SearchStudentFragment extends Fragment {
 		setListener();
 		return rootView;
 	}
+	
+	
 
 	View.OnClickListener commitButtonListener = new View.OnClickListener() {
 		@Override

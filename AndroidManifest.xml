@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.effectivenavigation"
+    package="edu.tcfsh.arrivinglaterecordapp"
     android:versionCode="1"
     android:versionName="1.0" >
 
@@ -15,7 +15,7 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Holo.Light" >
         <activity
-            android:name="edu.tcfsh.arrivinglaterecordapp.MainActivity"
+            android:name="edu.tcfsh.arrivinglaterecordapp.SetDateActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -24,6 +24,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="edu.tcfsh.arrivinglaterecordapp.MainActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name="edu.tcfsh.arrivinglaterecordapp.CollectionDemoActivity"
             android:label="@string/demo_collection"

@@ -1,5 +1,6 @@
 package edu.tcfsh.arrivinglaterecordapp;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
@@ -12,18 +13,21 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
-
-import com.example.effectivenavigation.R;
+import edu.tcfsh.arrivinglaterecordapp.R;
+import edu.tcfsh.arrivinglaterecordapp.ArrivingLateRecordFragment.OnDeleteSelectedListener;
 
 public class ArrivingLateRecordArrayAdapter extends ArrayAdapter<StudentRecord> {
 	private final Context context;
 	private ArrayList<StudentRecord> arrivingLateRecordList;
+	 OnDeleteSelectedListener mCallback;
 
-	public ArrivingLateRecordArrayAdapter(Context context, ArrayList<StudentRecord> arrivingLateRecordList) {
+	public ArrivingLateRecordArrayAdapter(Context context,
+			ArrayList<StudentRecord> arrivingLateRecordList,  OnDeleteSelectedListener mCallback) {
 		super(context, R.layout.arriving_late_record_item_listview,
 				arrivingLateRecordList);
 		this.context = context;
 		this.arrivingLateRecordList = arrivingLateRecordList;
+		this.mCallback = mCallback;
 
 	}
 
@@ -35,7 +39,7 @@ public class ArrivingLateRecordArrayAdapter extends ArrayAdapter<StudentRecord> 
 
 	public void updateList(StudentRecord s) {
 
-		arrivingLateRecordList.add(s);
+		arrivingLateRecordList.add(0, s);
 
 	}
 
@@ -51,6 +55,9 @@ public class ArrivingLateRecordArrayAdapter extends ArrayAdapter<StudentRecord> 
 					R.layout.arriving_late_record_item_listview, parent, false);
 
 			holder = new ArrivingLateViewHolder();
+
+			holder.timeText = (TextView) convertView
+					.findViewById(R.id.timeText);
 
 			holder.gradeText = (TextView) convertView
 					.findViewById(R.id.gradeNum);
@@ -71,6 +78,11 @@ public class ArrivingLateRecordArrayAdapter extends ArrayAdapter<StudentRecord> 
 		}
 
 		holder.deleteButton.setTag(position);
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String dateString = sdf.format(arrivingLateRecordList.get(position)
+				.getDate());
+		holder.timeText.setText(dateString);
 
 		holder.gradeText.setText(String.valueOf(arrivingLateRecordList.get(
 				position).getGradeNum()));
