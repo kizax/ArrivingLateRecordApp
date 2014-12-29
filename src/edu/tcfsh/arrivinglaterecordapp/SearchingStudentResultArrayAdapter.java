@@ -13,18 +13,24 @@ import android.widget.TextView;
 
 import com.example.effectivenavigation.R;
 
-public class SearchingStudentResultArrayAdapter extends ArrayAdapter<StudentRecord> {
+import edu.tcfsh.arrivinglaterecordapp.SearchStudentFragment.OnHeadlineSelectedListener;
+
+public class SearchingStudentResultArrayAdapter extends
+		ArrayAdapter<StudentRecord> {
 	private final Context context;
 	private final ArrayList<StudentRecord> searchResultList;
 	private final ArrayList<StudentRecord> arrivingLateRecordList;
+	OnHeadlineSelectedListener mCallback;
 
 	public SearchingStudentResultArrayAdapter(Context context,
 			ArrayList<StudentRecord> searchResultList,
-			ArrayList<StudentRecord> arrivingLateRecordList) {
+			ArrayList<StudentRecord> arrivingLateRecordList,
+			OnHeadlineSelectedListener mCallback) {
 		super(context, R.layout.num_item_listview, searchResultList);
 		this.context = context;
 		this.searchResultList = searchResultList;
 		this.arrivingLateRecordList = arrivingLateRecordList;
+		this.mCallback = mCallback;
 	}
 
 	@Override
@@ -72,8 +78,8 @@ public class SearchingStudentResultArrayAdapter extends ArrayAdapter<StudentReco
 				searchResultList.get(position).getClassNum());
 		holder.classText.setText(classText);
 
-		String numText = String.format("%1$02d", searchResultList
-				.get(position).getNum());
+		String numText = String.format("%1$02d", searchResultList.get(position)
+				.getNum());
 		holder.numText.setText(numText);
 
 		holder.studentIdText.setText(String.valueOf(searchResultList.get(
@@ -91,10 +97,12 @@ public class SearchingStudentResultArrayAdapter extends ArrayAdapter<StudentReco
 
 				StudentRecord studentRecord = searchResultList.get(pos);
 				Log.d("POS", "ID: " + studentRecord.getStudentId());
-				
+
 				arrivingLateRecordList.add(studentRecord);
-				
+
 				notifyDataSetChanged();
+
+				mCallback.onArticleSelected(studentRecord);
 
 			}
 		};

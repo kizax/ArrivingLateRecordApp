@@ -13,6 +13,7 @@ import jxl.NumberCell;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -35,6 +36,29 @@ public class SearchStudentFragment extends Fragment {
 	private ArrayList<StudentRecord> searchResultList;
 	private SearchingStudentResultArrayAdapter searchingStudentResultArrayAdapter;
 	private ArrayList<StudentRecord> arrivingLateRecordList;
+	
+    OnHeadlineSelectedListener mCallback;
+
+    // Container Activity must implement this interface
+    public interface OnHeadlineSelectedListener {
+        public void onArticleSelected(StudentRecord s);
+
+    }
+    
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnHeadlineSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
+
 	
 	public SearchStudentFragment(ArrayList<StudentRecord> arrivingLateRecordList){
 		this.arrivingLateRecordList = arrivingLateRecordList;
@@ -104,7 +128,7 @@ public class SearchStudentFragment extends Fragment {
 
 		searchResultList = new ArrayList<StudentRecord>();
 		searchingStudentResultArrayAdapter = new SearchingStudentResultArrayAdapter(myList.getContext(),
-				searchResultList, arrivingLateRecordList);
+				searchResultList, arrivingLateRecordList, mCallback);
 		myList.setAdapter(searchingStudentResultArrayAdapter);
 
 	}

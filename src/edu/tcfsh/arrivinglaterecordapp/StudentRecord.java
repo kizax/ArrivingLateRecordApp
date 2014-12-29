@@ -25,19 +25,18 @@ public class StudentRecord {
 
 	public boolean matchStudentID(String expression) {
 		String regep = expression.replace('*', '.');
-		return  Integer.toString(studentId).matches(regep);
-	}
-	
-	public boolean matchStudentName(String expression) {
-		String regep = expression.replace('*', '.');
-		return  studentName.matches(regep);
-	}
-	
-	public boolean matchStudentNum(String expression) {
-		String regep = expression.replace('*', '.');
-		return  getStudentNum().matches(regep);
+		return Integer.toString(studentId).matches(regep);
 	}
 
+	public boolean matchStudentName(String expression) {
+		String regep = expression.replace('*', '.');
+		return studentName.matches(regep);
+	}
+
+	public boolean matchStudentNum(String expression) {
+		String regep = expression.replace('*', '.');
+		return getStudentNum().matches(regep);
+	}
 
 	public int getGradeNum() {
 		return gradeNum;
@@ -77,6 +76,13 @@ public class StudentRecord {
 
 	public void setNum(int num) {
 		this.num = num;
+	}
+
+	@Override
+	public String toString() {
+		return getGradeNum() + " 年 " + getClassNum() + " 班 " + getNum() + " 號  "
+				+ getStudentId() + "  " + getStudentName();
+
 	}
 
 }

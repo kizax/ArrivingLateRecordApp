@@ -30,7 +30,10 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
@@ -41,15 +44,17 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener {
+		ActionBar.TabListener, SearchStudentFragment.OnHeadlineSelectedListener {
 
 	/**
 	 * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -62,11 +67,22 @@ public class MainActivity extends FragmentActivity implements
 	AppSectionsPagerAdapter mAppSectionsPagerAdapter;
 	private static ArrayList<StudentRecord> arrivingLateRecordList;
 
+	static ArrivingLateRecordFragment newFragment = new ArrivingLateRecordFragment();
+
 	/**
 	 * The {@link ViewPager} that will display the three primary sections of the
 	 * app, one at a time.
 	 */
 	ViewPager mViewPager;
+
+	@Override
+	public void onArticleSelected(StudentRecord s) {
+		// The user selected the headline of an article from the
+		// HeadlinesFragment
+		newFragment.updateList(s);
+		showToast(s.toString() +" 遲到!");
+
+	}
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -104,10 +120,9 @@ public class MainActivity extends FragmentActivity implements
 						// we have a reference to the
 						// Tab.
 						actionBar.setSelectedNavigationItem(position);
-						
+
 					}
-					
-					
+
 				});
 
 		// For each of the sections in the app, add a tab to the action bar.
@@ -121,7 +136,7 @@ public class MainActivity extends FragmentActivity implements
 					.setText(mAppSectionsPagerAdapter.getPageTitle(i))
 					.setTabListener(this));
 		}
-		
+
 		arrivingLateRecordList = new ArrayList<StudentRecord>();
 	}
 
@@ -136,7 +151,7 @@ public class MainActivity extends FragmentActivity implements
 		// When the given tab is selected, switch to the corresponding page in
 		// the ViewPager.
 		mViewPager.setCurrentItem(tab.getPosition());
-		
+
 	}
 
 	@Override
@@ -154,11 +169,11 @@ public class MainActivity extends FragmentActivity implements
 			super(fm);
 		}
 
-//		@Override
-//		public int getItemPosition(Object object){
-//		     return POSITION_NONE;
-//		}
-		
+		// @Override
+		// public int getItemPosition(Object object){
+		// return POSITION_NONE;
+		// }
+
 		@Override
 		public Fragment getItem(int i) {
 			switch (i) {
@@ -174,7 +189,7 @@ public class MainActivity extends FragmentActivity implements
 				// offers
 				// a launchpad into the other demonstrations in this example
 				// application.
-				return new ArrivingLateRecordFragment(arrivingLateRecordList);
+				return newFragment;
 
 			default:
 				// The other sections of the app are dummy placeholders.
@@ -279,6 +294,31 @@ public class MainActivity extends FragmentActivity implements
 							args.getInt(ARG_SECTION_NUMBER)));
 			return rootView;
 		}
+	}
+
+	private void showToast(String msg) {
+
+		Context context = getApplicationContext();
+		CharSequence text = msg;
+		int duration = Toast.LENGTH_SHORT;
+
+		Toast toast = Toast.makeText(context, text, duration);
+		toast.show();
+	}
+
+	@Override
+	public void onBackPressed() {
+		new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
+				.setTitle("提示").setMessage("確定離開?")
+				.setPositiveButton("確定", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {
+						finish();
+					}
+				})
+				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {
+					}
+				}).show();
 	}
 
 }

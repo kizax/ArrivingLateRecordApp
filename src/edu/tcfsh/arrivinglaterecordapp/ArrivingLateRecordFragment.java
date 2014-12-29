@@ -1,7 +1,9 @@
 package edu.tcfsh.arrivinglaterecordapp;
 
 import java.util.ArrayList;
+
 import com.example.effectivenavigation.R;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,9 +19,8 @@ public class ArrivingLateRecordFragment extends Fragment {
 	private ArrivingLateRecordArrayAdapter adapter;
 	private ArrayList<StudentRecord> arrivingLateRecordList;
 
-	public ArrivingLateRecordFragment(
-			ArrayList<StudentRecord> arrivingLateRecordList) {
-		this.arrivingLateRecordList = arrivingLateRecordList;
+	public ArrivingLateRecordFragment() {
+
 	}
 
 	@Override
@@ -49,12 +50,13 @@ public class ArrivingLateRecordFragment extends Fragment {
 		super.onResume();
 
 	}
+
+
+	 public void updateList(StudentRecord s) {
+		 adapter.updateList(s);
+		 adapter.notifyDataSetChanged();
 	
-//	@Override
-//	public void onAttatched() {
-//
-//
-//	}
+	 }
 
 	View.OnClickListener commitButtonListener = new View.OnClickListener() {
 		@Override
@@ -104,11 +106,11 @@ public class ArrivingLateRecordFragment extends Fragment {
 
 		myList = (ListView) rootView.findViewById(R.id.arrivingLatelist);
 		commitButton = (Button) rootView.findViewById(R.id.commitButton);
-		adapter = new ArrivingLateRecordArrayAdapter(myList.getContext(),
-				arrivingLateRecordList);
+		
+		arrivingLateRecordList = new ArrayList<StudentRecord>();
+		adapter = new ArrivingLateRecordArrayAdapter(myList.getContext(), arrivingLateRecordList);
 		myList.setAdapter(adapter);
 
 	}
-
 
 }
