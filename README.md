@@ -2,7 +2,8 @@ ArrivingLateRecordApp
 ================
 
 1.在內部儲存空間建立 student 資料夾<br>
-
+<br>
+<br>
 2.在 student 資料夾裡面放入學生名條，並重新命名為 studentData.xls<br>
 <br>
 檔案格式:<br>
@@ -10,8 +11,12 @@ ArrivingLateRecordApp
   210001 | 301 | 1 | 王大明<br>
   
   ps.前三欄儲存格須設定為數值，最末欄設為文字<br>
-
+<br>
+<br>
 3.現在開始可以打開app使用了!<br>
+如果已有遲到紀錄儲存在手機中，則會自動匯入。<br>
+如果先前沒有遲到紀錄，則會新增檔案。<br>
+<br>
 輸入學生的學號或年班號，找到學生<br>
 再按下"+"按鈕。將學生加到遲到紀錄中<br>
 <br>
@@ -26,6 +31,7 @@ Ex.<br>
 
 ![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/SearchingStudentFragment.jpg) ![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/SearchingStudentFragment_after%20Adding.jpg)
 <br>
+<br>
 4. 在遲到紀錄中，可刪除學生的遲到紀錄，<br>
 只要按下"X"按鈕，便可將學生的遲到紀錄消除<br>
 <br>
@@ -36,6 +42,6 @@ Ex.<br>
 ![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ArrivingLateRecordFragment_afterDeleting.jpg) <br>
 
  <br>
- 遲到紀錄xls檔案示意<br>
+ 遲到紀錄xls檔案示意圖<br>
 ![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ArrivingLateRecordFile.jpg) <br>
 <br>
