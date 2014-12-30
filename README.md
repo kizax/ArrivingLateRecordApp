@@ -30,9 +30,9 @@ Ex.<br>
 只要按下"X"按鈕，便可將學生的遲到紀錄消除<br>
 
 ![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ArrivingLateRecordFragment.jpg)
-![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ConfirmDialog.jpg)
+![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ConfirmDialog.jpg)<br>
 
-5. 按下儲存按鈕，則會將遲到紀錄儲存至Arriving Late Record資料夾中
-![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ArrivingLateRecordFragment_afterDeleting.jpg) 
-![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ArrivingLateRecordFile.jpg) 
+5. 按下儲存按鈕，則會將遲到紀錄儲存至Arriving Late Record資料夾中<br>
+![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ArrivingLateRecordFragment_afterDeleting.jpg) <br>
+![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ArrivingLateRecordFile.jpg) <br>
 
