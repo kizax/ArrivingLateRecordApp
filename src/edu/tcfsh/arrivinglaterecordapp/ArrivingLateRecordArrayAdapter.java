@@ -113,7 +113,7 @@ public class ArrivingLateRecordArrayAdapter extends ArrayAdapter<StudentRecord> 
 				final StudentRecord studentRecord = arrivingLateRecordList
 						.get(pos);
 
-				AlertDialog show = new AlertDialog.Builder(getContext(),
+				AlertDialog deleteArrivingLateRecordDialog = new AlertDialog.Builder(getContext(),
 						AlertDialog.THEME_HOLO_LIGHT)
 						.setTitle("提示")
 						.setMessage(

@@ -107,15 +107,14 @@ public class ArrivingLateRecordFragment extends Fragment {
 	View.OnClickListener saveFileButtonOnClickListener = new View.OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			writerTask();
-			mCallback.onSaveFileButtonSelected("檔案已儲存");
-
+			saveArrivingLateRecordFile();
 		}
 	};
 
 	private void setListener() {
 		saveFileButton.setOnClickListener(saveFileButtonOnClickListener);
 	}
+	
 
 	private void writerTask() {
 		String recordingDateStr = year + "." + month + "." + dayOfMonth;
@@ -185,7 +184,7 @@ public class ArrivingLateRecordFragment extends Fragment {
 						studentName = (String) lc.getString();
 					}
 
-					StudentRecord s = new StudentRecord(
+					StudentRecord studentRecord = new StudentRecord(
 							gradeAndClassAndNum / 10000,
 							(gradeAndClassAndNum % 10000) / 100,
 							(gradeAndClassAndNum % 100), studentId, studentName);
@@ -196,8 +195,8 @@ public class ArrivingLateRecordFragment extends Fragment {
 					Date date;
 					date = sdf.parse(timeLabel);
 
-					s.setDate(date);
-					arrivingLateRecordList.add(0, s);
+					studentRecord.setDate(date);
+					arrivingLateRecordList.add(studentRecord);
 
 					rowCount++;
 				}
@@ -247,14 +246,19 @@ public class ArrivingLateRecordFragment extends Fragment {
 
 	}
 
-	public boolean updateList(StudentRecord s) {
-		if (arrivingLateRecordArrayAdapter.updateList(s)) {
+	public boolean updateList(StudentRecord studentRecord) {
+		if (arrivingLateRecordArrayAdapter.updateList(studentRecord)) {
 			arrivingLateRecordArrayAdapter.notifyDataSetChanged();
 			arrivingLateRecordListView.smoothScrollToPosition(0);
 			return true;
 		} else {
 			return false;
 		}
+	}
+	
+	public void saveArrivingLateRecordFile(){
+		writerTask();
+		mCallback.onSaveFileButtonSelected("檔案已儲存!");
 	}
 
 }

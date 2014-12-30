@@ -16,42 +16,19 @@
 
 package edu.tcfsh.arrivinglaterecordapp;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
 import edu.tcfsh.arrivinglaterecordapp.R;
-import jxl.Cell;
-import jxl.CellType;
-import jxl.LabelCell;
-import jxl.NumberCell;
-import jxl.Sheet;
-import jxl.Workbook;
-import jxl.read.biff.BiffException;
-import jxl.write.WritableSheet;
-import jxl.write.WritableWorkbook;
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
@@ -67,6 +44,8 @@ public class MainActivity extends FragmentActivity implements
 
 	ViewPager mViewPager;
 	static ArrivingLateRecordFragment arrivingLateRecordFragment;
+	Builder savingFileAlertDialog;
+	Builder leavingActivityDialog;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,6 +60,44 @@ public class MainActivity extends FragmentActivity implements
 		// of the app.
 		mAppSectionsPagerAdapter = new AppSectionsPagerAdapter(
 				getSupportFragmentManager());
+
+		
+		leavingActivityDialog = new AlertDialog.Builder(this,
+				AlertDialog.THEME_HOLO_LIGHT);
+		leavingActivityDialog.setTitle("提示");
+		leavingActivityDialog.setMessage("確定離開?");
+		leavingActivityDialog.setPositiveButton("確定",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {
+						savingFileAlertDialog.show();
+
+					}
+				});
+		leavingActivityDialog.setNegativeButton("取消",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {
+					}
+				});
+		
+		
+		savingFileAlertDialog = new AlertDialog.Builder(this,
+				AlertDialog.THEME_HOLO_LIGHT);
+		savingFileAlertDialog.setTitle("提示");
+		savingFileAlertDialog.setMessage("離開前是否要儲存遲到紀錄?");
+		savingFileAlertDialog.setPositiveButton("確定",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {
+						arrivingLateRecordFragment.saveArrivingLateRecordFile();
+						finish();
+					}
+				});
+		savingFileAlertDialog.setNegativeButton("取消",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface arg0, int arg1) {
+						finish();
+					}
+				});
+
 
 		// Set up the action bar.
 		final ActionBar actionBar = getActionBar();
@@ -230,17 +247,7 @@ public class MainActivity extends FragmentActivity implements
 
 	@Override
 	public void onBackPressed() {
-		new AlertDialog.Builder(this, AlertDialog.THEME_HOLO_LIGHT)
-				.setTitle("提示").setMessage("確定離開?")
-				.setPositiveButton("確定", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface arg0, int arg1) {
-						finish();
-					}
-				})
-				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface arg0, int arg1) {
-					}
-				}).show();
+		leavingActivityDialog.show();
 	}
 
 	@Override
