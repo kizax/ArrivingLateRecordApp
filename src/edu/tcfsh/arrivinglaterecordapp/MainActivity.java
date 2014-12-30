@@ -55,47 +55,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener, SearchStudentFragment.OnHeadlineSelectedListener, ArrivingLateRecordFragment.OnDeleteSelectedListener {
+		ActionBar.TabListener,
+		SearchingStudentFragment.OnSearchingResultSelectedListener,
+		ArrivingLateRecordFragment.OnArrivingLateRecordSelectedListener {
 
-	/**
-	 * The {@link android.support.v4.view.PagerAdapter} that will provide
-	 * fragments for each of the three primary sections of the app. We use a
-	 * {@link android.support.v4.app.FragmentPagerAdapter} derivative, which
-	 * will keep every loaded fragment in memory. If this becomes too memory
-	 * intensive, it may be best to switch to a
-	 * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-	 */
 	AppSectionsPagerAdapter mAppSectionsPagerAdapter;
-	private static ArrayList<StudentRecord> arrivingLateRecordList;
-
-	/**
-	 * The {@link ViewPager} that will display the three primary sections of the
-	 * app, one at a time.
-	 */
-	ViewPager mViewPager;
-
 	private Bundle bundle;
 	private int dayOfMonth;
 	private int month;
 	private int year;
 
-	static ArrivingLateRecordFragment newFragment;
-
-	@Override
-	public void onArticleSelected(StudentRecord s) {
-		// The user selected the headline of an article from the
-		// HeadlinesFragment
-		newFragment.updateList(s);
-		showToast(s.toString() + " 遲到!");
-
-	}
+	ViewPager mViewPager;
+	static ArrivingLateRecordFragment arrivingLateRecordFragment;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.main_activity);
 
 		getBundle();
-		newFragment = new ArrivingLateRecordFragment(dayOfMonth, month, year);
+		arrivingLateRecordFragment = new ArrivingLateRecordFragment(dayOfMonth,
+				month, year);
 
 		// Create the adapter that will return a fragment for each of the three
 		// primary sections
@@ -146,7 +125,16 @@ public class MainActivity extends FragmentActivity implements
 					.setTabListener(this));
 		}
 
-		arrivingLateRecordList = new ArrayList<StudentRecord>();
+	}
+
+	@Override
+	public void onStudentRecordSelected(StudentRecord studentRecord) {
+		if (arrivingLateRecordFragment.updateList(studentRecord)) {
+			showToast(studentRecord.toString() + " 遲到!");
+		} else {
+			showToast(studentRecord.toString() + " \n已在遲到紀錄中");
+		}
+
 	}
 
 	private void getBundle() {
@@ -175,20 +163,11 @@ public class MainActivity extends FragmentActivity implements
 			FragmentTransaction fragmentTransaction) {
 	}
 
-	/**
-	 * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-	 * one of the primary sections of the app.
-	 */
 	public static class AppSectionsPagerAdapter extends FragmentPagerAdapter {
 
 		public AppSectionsPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
-
-		// @Override
-		// public int getItemPosition(Object object){
-		// return POSITION_NONE;
-		// }
 
 		@Override
 		public Fragment getItem(int i) {
@@ -198,22 +177,18 @@ public class MainActivity extends FragmentActivity implements
 				// offers
 				// a launchpad into the other demonstrations in this example
 				// application.
-				return new SearchStudentFragment(arrivingLateRecordList);
+				return new SearchingStudentFragment();
 
 			case 1:
 				// The first section of the app is the most interesting -- it
 				// offers
 				// a launchpad into the other demonstrations in this example
 				// application.
-				return newFragment;
+				return arrivingLateRecordFragment;
 
 			default:
 				// The other sections of the app are dummy placeholders.
-				Fragment fragment = new DummySectionFragment();
-				Bundle args = new Bundle();
-				args.putInt(DummySectionFragment.ARG_SECTION_NUMBER, i + 1);
-				fragment.setArguments(args);
-				return fragment;
+				return new SearchingStudentFragment();
 			}
 		}
 
@@ -244,76 +219,7 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 
-	/**
-	 * A fragment that launches other parts of the demo application.
-	 */
-	public static class LaunchpadSectionFragment extends Fragment {
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(
-					R.layout.fragment_section_launchpad, container, false);
-
-			// Demonstration of a collection-browsing activity.
-			rootView.findViewById(R.id.demo_collection_button)
-					.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							Intent intent = new Intent(getActivity(),
-									CollectionDemoActivity.class);
-							startActivity(intent);
-						}
-					});
-
-			// Demonstration of navigating to external activities.
-			rootView.findViewById(R.id.demo_external_activity)
-					.setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View view) {
-							// Create an intent that asks the user to pick a
-							// photo, but using
-							// FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET, ensures that
-							// relaunching
-							// the application from the device home screen does
-							// not return
-							// to the external activity.
-							Intent externalActivityIntent = new Intent(
-									Intent.ACTION_PICK);
-							externalActivityIntent.setType("image/*");
-							externalActivityIntent
-									.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-							startActivity(externalActivityIntent);
-						}
-					});
-
-			return rootView;
-		}
-	}
-
-	/**
-	 * A dummy fragment representing a section of the app, but that simply
-	 * displays dummy text.
-	 */
-	public static class DummySectionFragment extends Fragment {
-
-		public static final String ARG_SECTION_NUMBER = "section_number";
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_section_dummy,
-					container, false);
-			Bundle args = getArguments();
-			((TextView) rootView.findViewById(android.R.id.text1))
-					.setText(getString(R.string.dummy_section_text,
-							args.getInt(ARG_SECTION_NUMBER)));
-			return rootView;
-		}
-	}
-
 	private void showToast(String msg) {
-
 		Context context = getApplicationContext();
 		CharSequence text = msg;
 		int duration = Toast.LENGTH_SHORT;
@@ -338,8 +244,7 @@ public class MainActivity extends FragmentActivity implements
 	}
 
 	@Override
-	public void onDeleteSelected(String msg) {
-		// TODO Auto-generated method stub
+	public void onSaveFileButtonSelected(String msg) {
 		showToast(msg);
 	}
 

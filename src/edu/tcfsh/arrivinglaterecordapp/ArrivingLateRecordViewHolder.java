@@ -3,7 +3,7 @@ package edu.tcfsh.arrivinglaterecordapp;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ArrivingLateViewHolder {
+public class ArrivingLateRecordViewHolder {
 
 	TextView timeText;
 	
@@ -16,7 +16,7 @@ public class ArrivingLateViewHolder {
 	StudentRecord studentRecord;
 	Button deleteButton;
 	
-	ArrivingLateViewHolder(){
+	ArrivingLateRecordViewHolder(){
 		
 	}
 

@@ -14,7 +14,7 @@ import android.widget.DatePicker;
 import android.widget.Toast;
 
 
-public class SetDateActivity extends Activity {
+public class SetRecordingDateActivity extends Activity {
 
 	private DatePicker datePicker;
 	private Button confirmButton;
@@ -22,7 +22,7 @@ public class SetDateActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_set_date);
+		setContentView(R.layout.set_date_activity);
 		initialize();
 		initializeDatePicker();
 		setListener();
@@ -31,7 +31,7 @@ public class SetDateActivity extends Activity {
 
 	private void initialize() {
 		datePicker = (DatePicker) findViewById(R.id.datePicker);
-		confirmButton = (Button) findViewById(R.id.buttonConfirm);
+		confirmButton = (Button) findViewById(R.id.confirmButton);
 
 	}
 	
@@ -47,16 +47,16 @@ public class SetDateActivity extends Activity {
 	}
 	
 	private void setListener() {
-		confirmButton.setOnClickListener(buttonConfirmClickListener);
+		confirmButton.setOnClickListener(confirmButtonOnClickListener);
 		
 	}
 
 
-	private Button.OnClickListener buttonConfirmClickListener = new Button.OnClickListener(){
+	private Button.OnClickListener confirmButtonOnClickListener = new Button.OnClickListener(){
 		@Override
 		public void onClick(View v){
 			Intent intent = new Intent();
-			intent.setClass(SetDateActivity.this, MainActivity.class);
+			intent.setClass(SetRecordingDateActivity.this, MainActivity.class);
 			Bundle bundle = new Bundle();
 			
 			bundle.putInt("DayOfMonth", datePicker.getDayOfMonth());
@@ -65,8 +65,7 @@ public class SetDateActivity extends Activity {
 			
 			intent.putExtras(bundle);
 			startActivity(intent);
-			SetDateActivity.this.finish();
-			confirmButton.setOnClickListener(buttonConfirmClickListener);
+			SetRecordingDateActivity.this.finish();
 		}
 	};
     

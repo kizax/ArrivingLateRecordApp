@@ -17,7 +17,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,48 +25,45 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class SearchStudentFragment extends Fragment {
+public class SearchingStudentFragment extends Fragment {
+	
 	private ArrayList<StudentRecord> studentRecordList;
-
 	private TextView statusText;
 	private EditText regexEditText;
-	private ListView myList;
+	private ListView searchingResultListView;
 	private Button commitButton;
-	private ArrayList<StudentRecord> searchResultList;
-	private SearchingStudentResultArrayAdapter searchingStudentResultArrayAdapter;
-	private ArrayList<StudentRecord> arrivingLateRecordList;
+	private ArrayList<StudentRecord> searchingResultList;
+	private SearchingResultArrayAdapter searchingResultArrayAdapter;
 	
-    OnHeadlineSelectedListener mCallback;
+    OnSearchingResultSelectedListener mCallback;
+    
+	public SearchingStudentFragment(){
+	}
 
-    // Container Activity must implement this interface
-    public interface OnHeadlineSelectedListener {
-        public void onArticleSelected(StudentRecord s);
+	
+	
+    public interface OnSearchingResultSelectedListener {
+        public void onStudentRecordSelected(StudentRecord studentRecord);
 
     }
     
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
         try {
-            mCallback = (OnHeadlineSelectedListener) activity;
+            mCallback = (OnSearchingResultSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnHeadlineSelectedListener");
+                    + " must implement OnSearchingResultSelectedListener");
         }
     }
-
-	
-	public SearchStudentFragment(ArrayList<StudentRecord> arrivingLateRecordList){
-		this.arrivingLateRecordList = arrivingLateRecordList;
-	}
+    
+    
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.search_student_by_id_fragment,
+		View rootView = inflater.inflate(R.layout.searching_student_fragment,
 				container, false);
 		initialize(rootView);
 		initializeFileWriter();
@@ -75,71 +71,20 @@ public class SearchStudentFragment extends Fragment {
 		return rootView;
 	}
 	
-	
-
-	View.OnClickListener commitButtonListener = new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-
-			String expression = regexEditText.getText().toString();
-			statusText.setText("您的查詢：" + expression);
-			regexEditText.setText("");
-
-			searchResultList.clear();
-			switch (expression.length()) {
-			case 2:
-			case 3:
-			case 4:
-				for (StudentRecord rec : studentRecordList) {
-					if (rec.matchStudentName(expression)) {
-						searchResultList.add(rec);
-					}
-				}
-				break;
-			case 5:
-				for (StudentRecord rec : studentRecordList) {
-					if (rec.matchStudentNum(expression)) {
-						searchResultList.add(rec);
-					}
-				}
-				break;
-			case 6:
-				for (StudentRecord rec : studentRecordList) {
-					if (rec.matchStudentID(expression)) {
-						searchResultList.add(rec);
-					}
-				}
-				break;
-			}
-
-			searchingStudentResultArrayAdapter.notifyDataSetChanged();
-
-		}
-	};
-
-	private void setListener() {
-		commitButton.setOnClickListener(commitButtonListener);
-	}
-
 	private void initialize(View rootView) {
 		regexEditText = (EditText) rootView.findViewById(R.id.regexEditText);
 		statusText = (TextView) rootView.findViewById(R.id.statusText);
-		myList = (ListView) rootView.findViewById(R.id.list);
-		commitButton = (Button) rootView.findViewById(R.id.commitButton);
+		searchingResultListView = (ListView) rootView.findViewById(R.id.searchingResultList);
+		commitButton = (Button) rootView.findViewById(R.id.saveFileButton);
 		studentRecordList = new ArrayList<StudentRecord>();
 
-		searchResultList = new ArrayList<StudentRecord>();
-		searchingStudentResultArrayAdapter = new SearchingStudentResultArrayAdapter(myList.getContext(),
-				searchResultList, arrivingLateRecordList, mCallback);
-		myList.setAdapter(searchingStudentResultArrayAdapter);
+		searchingResultList = new ArrayList<StudentRecord>();
+		searchingResultArrayAdapter = new SearchingResultArrayAdapter(searchingResultListView.getContext(),
+				searchingResultList, mCallback);
+		searchingResultListView.setAdapter(searchingResultArrayAdapter);
 
 	}
-
-	private String getStudentFileFileName() {
-		String studentDataFileName = "studentData.xls";
-		return studentDataFileName;
-	}
-
+	
 	private void initializeFileWriter() {
 
 		// 指定xls存檔檔名
@@ -147,12 +92,6 @@ public class SearchStudentFragment extends Fragment {
 
 		File SDCardpath = Environment.getExternalStorageDirectory();
 		File studentData = new File(SDCardpath.getAbsolutePath() + "/student/"
-				+ studentDataFileName);
-		// File copyOfAttendanceRecord = new
-		// File(SDCardpath.getAbsolutePath()
-		// + "/attendance Record/" + attendanceRecordFileName + "_copy");
-
-		Log.d("kizax", SDCardpath.getAbsolutePath() + "/student/"
 				+ studentDataFileName);
 
 		// 讀取學生名條
@@ -215,5 +154,55 @@ public class SearchStudentFragment extends Fragment {
 		}
 
 	}
+
+	View.OnClickListener commitButtonListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+
+			String regex = regexEditText.getText().toString();
+			statusText.setText("您的查詢：" + regex);
+			regexEditText.setText("");
+
+			searchingResultList.clear();
+			switch (regex.length()) {
+			case 2:
+			case 3:
+			case 4:
+				for (StudentRecord studentRecord : studentRecordList) {
+					if (studentRecord.matchStudentName(regex)) {
+						searchingResultList.add(studentRecord);
+					}
+				}
+				break;
+			case 5:
+				for (StudentRecord studentRecord : studentRecordList) {
+					if (studentRecord.matchStudentNum(regex)) {
+						searchingResultList.add(studentRecord);
+					}
+				}
+				break;
+			case 6:
+				for (StudentRecord studentRecord : studentRecordList) {
+					if (studentRecord.matchStudentID(regex)) {
+						searchingResultList.add(studentRecord);
+					}
+				}
+				break;
+			}
+
+			searchingResultArrayAdapter.notifyDataSetChanged();
+
+		}
+	};
+
+	private void setListener() {
+		commitButton.setOnClickListener(commitButtonListener);
+	}
+
+	private String getStudentFileFileName() {
+		String studentDataFileName = "studentData.xls";
+		return studentDataFileName;
+	}
+
 
 }

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,16 +13,17 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.tcfsh.arrivinglaterecordapp.R;
-import edu.tcfsh.arrivinglaterecordapp.ArrivingLateRecordFragment.OnDeleteSelectedListener;
+import edu.tcfsh.arrivinglaterecordapp.ArrivingLateRecordFragment.OnArrivingLateRecordSelectedListener;
 
 public class ArrivingLateRecordArrayAdapter extends ArrayAdapter<StudentRecord> {
 	private final Context context;
 	private ArrayList<StudentRecord> arrivingLateRecordList;
-	 OnDeleteSelectedListener mCallback;
+	OnArrivingLateRecordSelectedListener mCallback;
 
 	public ArrivingLateRecordArrayAdapter(Context context,
-			ArrayList<StudentRecord> arrivingLateRecordList,  OnDeleteSelectedListener mCallback) {
-		super(context, R.layout.arriving_late_record_item_listview,
+			ArrayList<StudentRecord> arrivingLateRecordList,
+			OnArrivingLateRecordSelectedListener mCallback) {
+		super(context, R.layout.arriving_late_record_item,
 				arrivingLateRecordList);
 		this.context = context;
 		this.arrivingLateRecordList = arrivingLateRecordList;
@@ -37,24 +37,27 @@ public class ArrivingLateRecordArrayAdapter extends ArrayAdapter<StudentRecord> 
 
 	}
 
-	public void updateList(StudentRecord s) {
-
-		arrivingLateRecordList.add(0, s);
+	public boolean updateList(StudentRecord studentRecord) {
+		if (!arrivingLateRecordList.contains(studentRecord)) {
+			arrivingLateRecordList.add(0, studentRecord);
+			return true;
+		}
+		return false;
 
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		ArrivingLateViewHolder holder;
+		ArrivingLateRecordViewHolder holder;
 
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			convertView = inflater.inflate(
-					R.layout.arriving_late_record_item_listview, parent, false);
+					R.layout.arriving_late_record_item, parent, false);
 
-			holder = new ArrivingLateViewHolder();
+			holder = new ArrivingLateRecordViewHolder();
 
 			holder.timeText = (TextView) convertView
 					.findViewById(R.id.timeText);
@@ -74,12 +77,12 @@ public class ArrivingLateRecordArrayAdapter extends ArrayAdapter<StudentRecord> 
 			convertView.setTag(holder);
 
 		} else {
-			holder = (ArrivingLateViewHolder) convertView.getTag();
+			holder = (ArrivingLateRecordViewHolder) convertView.getTag();
 		}
 
 		holder.deleteButton.setTag(position);
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd EEE HH:mm:ss");
 		String dateString = sdf.format(arrivingLateRecordList.get(position)
 				.getDate());
 		holder.timeText.setText(dateString);
@@ -106,11 +109,9 @@ public class ArrivingLateRecordArrayAdapter extends ArrayAdapter<StudentRecord> 
 			public void onClick(final View v) {
 
 				int pos = (Integer) v.getTag();
-				Log.d("POS", "POS: " + pos);
 
 				final StudentRecord studentRecord = arrivingLateRecordList
 						.get(pos);
-				Log.d("POS", "ID: " + studentRecord.getStudentId());
 
 				AlertDialog show = new AlertDialog.Builder(getContext(),
 						AlertDialog.THEME_HOLO_LIGHT)

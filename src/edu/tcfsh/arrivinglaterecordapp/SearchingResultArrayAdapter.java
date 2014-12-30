@@ -12,23 +12,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import edu.tcfsh.arrivinglaterecordapp.R;
-import edu.tcfsh.arrivinglaterecordapp.SearchStudentFragment.OnHeadlineSelectedListener;
+import edu.tcfsh.arrivinglaterecordapp.SearchingStudentFragment.OnSearchingResultSelectedListener;
 
-public class SearchingStudentResultArrayAdapter extends
-		ArrayAdapter<StudentRecord> {
+public class SearchingResultArrayAdapter extends ArrayAdapter<StudentRecord> {
 	private final Context context;
-	private final ArrayList<StudentRecord> searchResultList;
-	private final ArrayList<StudentRecord> arrivingLateRecordList;
-	OnHeadlineSelectedListener mCallback;
+	private final ArrayList<StudentRecord> searchingResultList;
+	OnSearchingResultSelectedListener mCallback;
 
-	public SearchingStudentResultArrayAdapter(Context context,
+	public SearchingResultArrayAdapter(Context context,
 			ArrayList<StudentRecord> searchResultList,
-			ArrayList<StudentRecord> arrivingLateRecordList,
-			OnHeadlineSelectedListener mCallback) {
-		super(context, R.layout.num_item_listview, searchResultList);
+			OnSearchingResultSelectedListener mCallback) {
+		super(context, R.layout.student_data_item, searchResultList);
 		this.context = context;
-		this.searchResultList = searchResultList;
-		this.arrivingLateRecordList = arrivingLateRecordList;
+		this.searchingResultList = searchResultList;
 		this.mCallback = mCallback;
 	}
 
@@ -40,15 +36,15 @@ public class SearchingStudentResultArrayAdapter extends
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
-		ViewHolder holder;
+		StudentRecordViewHolder holder;
 
 		if (convertView == null) {
 			LayoutInflater inflater = (LayoutInflater) context
 					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			convertView = inflater.inflate(R.layout.num_item_listview, parent,
+			convertView = inflater.inflate(R.layout.student_data_item, parent,
 					false);
 
-			holder = new ViewHolder();
+			holder = new StudentRecordViewHolder();
 
 			holder.gradeText = (TextView) convertView
 					.findViewById(R.id.gradeNum);
@@ -65,44 +61,36 @@ public class SearchingStudentResultArrayAdapter extends
 			convertView.setTag(holder);
 
 		} else {
-			holder = (ViewHolder) convertView.getTag();
+			holder = (StudentRecordViewHolder) convertView.getTag();
 		}
 
 		holder.addButton.setTag(position);
 
-		holder.gradeText.setText(String.valueOf(searchResultList.get(position)
-				.getGradeNum()));
+		holder.gradeText.setText(String.valueOf(searchingResultList.get(
+				position).getGradeNum()));
 
 		String classText = String.format("%1$02d",
-				searchResultList.get(position).getClassNum());
+				searchingResultList.get(position).getClassNum());
 		holder.classText.setText(classText);
 
-		String numText = String.format("%1$02d", searchResultList.get(position)
-				.getNum());
+		String numText = String.format("%1$02d",
+				searchingResultList.get(position).getNum());
 		holder.numText.setText(numText);
 
-		holder.studentIdText.setText(String.valueOf(searchResultList.get(
+		holder.studentIdText.setText(String.valueOf(searchingResultList.get(
 				position).getStudentId()));
 
-		holder.studentNameText.setText(String.valueOf(searchResultList.get(
+		holder.studentNameText.setText(String.valueOf(searchingResultList.get(
 				position).getStudentName()));
 
 		View.OnClickListener AddButtonListener = new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 
-				int pos = (Integer) v.getTag();
-				Log.d("POS", "POS: " + pos);
-
-				StudentRecord studentRecord = searchResultList.get(pos);
-				Log.d("POS", "ID: " + studentRecord.getStudentId());
-
+				int position = (Integer) v.getTag();
+				StudentRecord studentRecord = searchingResultList.get(position);
 				studentRecord.setDate(new Date());
-				arrivingLateRecordList.add(studentRecord);
-
-				notifyDataSetChanged();
-
-				mCallback.onArticleSelected(studentRecord);
+				mCallback.onStudentRecordSelected(studentRecord);
 
 			}
 		};

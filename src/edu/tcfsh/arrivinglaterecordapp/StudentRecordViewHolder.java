@@ -3,7 +3,7 @@ package edu.tcfsh.arrivinglaterecordapp;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class ViewHolder {
+public class StudentRecordViewHolder {
 
 	TextView gradeText;
 	TextView classText;
@@ -14,7 +14,7 @@ public class ViewHolder {
 	StudentRecord studentRecord;
 	Button addButton;
 	
-	ViewHolder(){
+	StudentRecordViewHolder(){
 		
 	}
 

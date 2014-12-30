@@ -15,7 +15,6 @@ import jxl.Sheet;
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import edu.tcfsh.arrivinglaterecordapp.R;
-import edu.tcfsh.arrivinglaterecordapp.SearchStudentFragment.OnHeadlineSelectedListener;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Environment;
@@ -29,16 +28,16 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class ArrivingLateRecordFragment extends Fragment {
-	private ListView myList;
+	private ListView arrivingLateRecordListView;
 	private TextView titleText;
-	private Button commitButton;
-	private ArrivingLateRecordArrayAdapter adapter;
+	private Button saveFileButton;
+	private ArrivingLateRecordArrayAdapter arrivingLateRecordArrayAdapter;
 	private ArrayList<StudentRecord> arrivingLateRecordList;
 	private int dayOfMonth;
 	private int month;
 	private int year;
 	private File arrivingLateRecord;
-	OnDeleteSelectedListener mCallback;
+	OnArrivingLateRecordSelectedListener mCallback;
 
 	public ArrivingLateRecordFragment(int dayOfMonth, int month, int year) {
 		this.dayOfMonth = dayOfMonth;
@@ -46,9 +45,8 @@ public class ArrivingLateRecordFragment extends Fragment {
 		this.year = year;
 	}
 
-	// Container Activity must implement this interface
-	public interface OnDeleteSelectedListener {
-		public void onDeleteSelected(String msg);
+	public interface OnArrivingLateRecordSelectedListener {
+		public void onSaveFileButtonSelected(String msg);
 
 	}
 
@@ -56,10 +54,8 @@ public class ArrivingLateRecordFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 
-		// This makes sure that the container activity has implemented
-		// the callback interface. If not, it throws an exception
 		try {
-			mCallback = (OnDeleteSelectedListener) activity;
+			mCallback = (OnArrivingLateRecordSelectedListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement OnHeadlineSelectedListener");
@@ -69,7 +65,7 @@ public class ArrivingLateRecordFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.arriving_late_fragment,
+		View rootView = inflater.inflate(R.layout.arriving_late_record_fragment,
 				container, false);
 		initialize(rootView);
 		initializeText();
@@ -78,38 +74,61 @@ public class ArrivingLateRecordFragment extends Fragment {
 		return rootView;
 	}
 
-	private void writerTask() {
+	private void initialize(View rootView) {
+		arrivingLateRecordListView = (ListView) rootView
+				.findViewById(R.id.arrivingLateRecordList);
+		titleText = (TextView) rootView.findViewById(R.id.titleText);
+		saveFileButton = (Button) rootView.findViewById(R.id.saveFileButton);
+		arrivingLateRecordList = new ArrayList<StudentRecord>();
+		arrivingLateRecordArrayAdapter = new ArrivingLateRecordArrayAdapter(
+				arrivingLateRecordListView.getContext(),
+				arrivingLateRecordList, mCallback);
+		arrivingLateRecordListView.setAdapter(arrivingLateRecordArrayAdapter);
+	}
+
+	private void initializeText() {
+
 		String title = "";
 		String givenDateString = year + "." + month + "." + dayOfMonth;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
 		try {
 			Date date = sdf.parse(givenDateString);
+			long timeInMilliseconds = date.getTime();
+
+			title = String.format("%1$tY年%1$tb%1$td日 %1$tA 遲到紀錄",
+					timeInMilliseconds);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+
+		titleText.setText(title);
+	}
+
+	View.OnClickListener saveFileButtonOnClickListener = new View.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			writerTask();
+			mCallback.onSaveFileButtonSelected("檔案已儲存");
+
+		}
+	};
+
+	private void setListener() {
+		saveFileButton.setOnClickListener(saveFileButtonOnClickListener);
+	}
+
+	private void writerTask() {
+		String recordingDateStr = year + "." + month + "." + dayOfMonth;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
+		try {
+			Date recordingDate = sdf.parse(recordingDateStr);
 			WriterThread writerThread = new WriterThread(arrivingLateRecord,
-					arrivingLateRecordList, date);
+					arrivingLateRecordList, recordingDate);
 			writerThread.start();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
-	}
-
-	private String getAttendanceRecordFileName() {
-
-		String attendanceRecordFileName = "";
-		String dateStr = year + "." + month + "." + dayOfMonth;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
-
-		try {
-			Date date = sdf.parse(dateStr);
-			long timeInMilliseconds = date.getTime();
-
-			attendanceRecordFileName = String.format(
-					"%1$tY年%1$tb%1$td日 %1$tA 遲到紀錄.xls", timeInMilliseconds);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-
-		return attendanceRecordFileName;
 	}
 
 	private void initializeFileWriter() {
@@ -120,11 +139,6 @@ public class ArrivingLateRecordFragment extends Fragment {
 		File SDCardpath = Environment.getExternalStorageDirectory();
 		arrivingLateRecord = new File(SDCardpath.getAbsolutePath()
 				+ "/arriving late record/" + attendanceRecordFileName);
-		// File copyOfAttendanceRecord = new File(SDCardpath.getAbsolutePath()
-		// + "/attendance Record/" + attendanceRecordFileName + "_copy");
-
-		Log.d("kizax", SDCardpath.getAbsolutePath() + "/arriving late record/"
-				+ attendanceRecordFileName);
 
 		// 檢查路徑是否存在
 		if (!arrivingLateRecord.getParentFile().exists()) {
@@ -132,15 +146,15 @@ public class ArrivingLateRecordFragment extends Fragment {
 
 		}
 
-		//
 		try {
 			if (arrivingLateRecord.exists()) {
+
+				// 如已有檔案存在，則讀入檔案資料
 				Workbook workbook = Workbook.getWorkbook(arrivingLateRecord);
 				Sheet sheet = workbook.getSheet(0);
 
 				int rowCount = 2;
 
-				int a = sheet.getRows();
 				while (rowCount < sheet.getRows()) {
 
 					String timeLabel = "";
@@ -177,7 +191,7 @@ public class ArrivingLateRecordFragment extends Fragment {
 							(gradeAndClassAndNum % 100), studentId, studentName);
 
 					SimpleDateFormat sdf = new SimpleDateFormat(
-							"yyyy-MM-dd HH:mm:ss");
+							"yyyy-MM-dd EEE HH:mm:ss");
 
 					Date date;
 					date = sdf.parse(timeLabel);
@@ -189,6 +203,7 @@ public class ArrivingLateRecordFragment extends Fragment {
 				}
 
 			} else {
+				// 如檔案不存在，則建立檔案
 				try {
 					arrivingLateRecord.createNewFile();
 				} catch (IOException e) {
@@ -201,74 +216,45 @@ public class ArrivingLateRecordFragment extends Fragment {
 		} catch (BiffException e) {
 			e.printStackTrace();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 
-	private void initializeText() {
+	private String getAttendanceRecordFileName() {
 
-		String title = "";
-		String givenDateString = year + "." + month + "." + dayOfMonth;
+		String attendanceRecordFileName = "";
+		String recordingDateStr = year + "." + month + "." + dayOfMonth;
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
-		try {
-			Date date = sdf.parse(givenDateString);
-			long timeInMilliseconds = date.getTime();
 
-			title = String.format("%1$tY年%1$tb%1$td日 %1$tA 遲到紀錄",
-					timeInMilliseconds);
+		try {
+			Date recordingDate = sdf.parse(recordingDateStr);
+			long timeInMilliseconds = recordingDate.getTime();
+
+			attendanceRecordFileName = String.format(
+					"%1$tY年%1$tb%1$td日 %1$tA 遲到紀錄.xls", timeInMilliseconds);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
-		titleText.setText(title);
+		return attendanceRecordFileName;
 	}
 
 	@Override
 	public void onStart() {
-		adapter.notifyDataSetChanged();
+		arrivingLateRecordArrayAdapter.notifyDataSetChanged();
 		super.onStart();
 
 	}
 
-	@Override
-	public void onResume() {
-		adapter.notifyDataSetChanged();
-		super.onResume();
-
-	}
-
-	public void updateList(StudentRecord s) {
-		adapter.updateList(s);
-		adapter.notifyDataSetChanged();
-
-		myList.smoothScrollToPosition(0);
-	}
-
-	View.OnClickListener commitButtonListener = new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			writerTask();
-			mCallback.onDeleteSelected("檔案已儲存");
-
+	public boolean updateList(StudentRecord s) {
+		if (arrivingLateRecordArrayAdapter.updateList(s)) {
+			arrivingLateRecordArrayAdapter.notifyDataSetChanged();
+			arrivingLateRecordListView.smoothScrollToPosition(0);
+			return true;
+		} else {
+			return false;
 		}
-	};
-
-	private void setListener() {
-		commitButton.setOnClickListener(commitButtonListener);
-	}
-
-	private void initialize(View rootView) {
-
-		myList = (ListView) rootView.findViewById(R.id.arrivingLatelist);
-		titleText = (TextView) rootView.findViewById(R.id.titleText);
-		commitButton = (Button) rootView.findViewById(R.id.commitButton);
-		arrivingLateRecordList = new ArrayList<StudentRecord>();
-		adapter = new ArrivingLateRecordArrayAdapter(myList.getContext(),
-				arrivingLateRecordList, mCallback);
-		myList.setAdapter(adapter);
-
 	}
 
 }

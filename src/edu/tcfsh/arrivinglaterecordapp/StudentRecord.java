@@ -1,8 +1,9 @@
 package edu.tcfsh.arrivinglaterecordapp;
 
+import java.util.Comparator;
 import java.util.Date;
 
-public class StudentRecord {
+public class StudentRecord implements Comparator {
 	private int gradeNum;
 	private int classNum;
 	private int studentId;
@@ -17,7 +18,7 @@ public class StudentRecord {
 		this.num = num;
 		this.studentId = studentId;
 		this.studentName = studentName;
-	
+
 	}
 
 	public Date getDate() {
@@ -92,9 +93,38 @@ public class StudentRecord {
 
 	@Override
 	public String toString() {
-		return getGradeNum() + " 年 " + getClassNum() + " 班 " + getNum() + " 號  "
-				+ getStudentId() + "  " + getStudentName();
+		return getGradeNum() + " 年 " + getClassNum() + " 班 " + getNum()
+				+ " 號  " + getStudentId() + "  " + getStudentName();
 
+	}
+
+	@Override
+	public int compare(Object object1, Object object2) {
+		StudentRecord studentRecord1 = (StudentRecord) object1;
+		StudentRecord studentRecord2 = (StudentRecord) object2;
+
+		if (studentRecord1.getStudentId() > studentRecord2.getStudentId()) {
+			return 1;
+		} else if (studentRecord1.getStudentId() < studentRecord2
+				.getStudentId()) {
+			return -1;
+		} else if (studentRecord1.getStudentId() == studentRecord2
+				.getStudentId()) {
+			return 0;
+		}
+		return -1;
+
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (o instanceof StudentRecord) {
+			StudentRecord studentRecord = (StudentRecord) o;
+			if (this.getStudentId() == studentRecord.getStudentId()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }
