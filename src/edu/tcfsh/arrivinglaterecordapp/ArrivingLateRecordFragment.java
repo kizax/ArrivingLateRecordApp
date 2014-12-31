@@ -150,7 +150,7 @@ public class ArrivingLateRecordFragment extends Fragment {
 
 				// 如已有檔案存在，則讀入檔案資料
 				Workbook workbook = Workbook.getWorkbook(arrivingLateRecord);
-				Sheet sheet = workbook.getSheet(0);
+				Sheet sheet = workbook.getSheet("ariving late record");
 
 				int rowCount = 2;
 
@@ -196,7 +196,7 @@ public class ArrivingLateRecordFragment extends Fragment {
 					date = sdf.parse(timeLabel);
 
 					studentRecord.setDate(date);
-					arrivingLateRecordList.add(studentRecord);
+					arrivingLateRecordList.add(0, studentRecord);
 
 					rowCount++;
 				}
