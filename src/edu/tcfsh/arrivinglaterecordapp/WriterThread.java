@@ -89,12 +89,12 @@ public class WriterThread extends Thread {
 				}
 			}
 
-			int arivingLateStudentColumnIndex = 0;
-			CellView arivingLateStudentColumnCell = arivingLateRecordSheet
-					.getColumnView(arivingLateStudentColumnIndex);
-			arivingLateStudentColumnCell.setAutosize(true);
-			arivingLateRecordSheet.setColumnView(arivingLateStudentColumnIndex,
-					arivingLateStudentColumnCell);
+			int statisticalTableStudentNumColumnIndex = 1;
+			CellView statisticalTableStudentNumColumnCell = statisticalTableSheet
+					.getColumnView(statisticalTableStudentNumColumnIndex);
+			statisticalTableStudentNumColumnCell.setSize(14*256);;
+			statisticalTableSheet.setColumnView(statisticalTableStudentNumColumnIndex,
+					statisticalTableStudentNumColumnCell);
 
 			long timeInMilliseconds = date.getTime();
 
