@@ -29,14 +29,12 @@ Ex.<br>
 輸入6碼學號 21000. 或 21000* ，可依學號查到 210000 ~ 210009 的學生<br>
 輸入5碼年班號 310.. 或 310** ，可依年班號查到 310 整班學生<br>
 
-![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/SearchingStudentFragment.jpg) ![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/SearchingStudentFragment_after%20Adding.jpg)
 <br>
 <br>
 4. 在遲到紀錄中，可刪除學生的遲到紀錄，<br>
 只要按下"X"按鈕，便可將學生的遲到紀錄消除<br>
 <br>
-![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ArrivingLateRecordFragment.jpg)
-![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ConfirmDialog.jpg)<br>
+
 <br>
 5. 按下儲存按鈕，則會將遲到紀錄儲存至Arriving Late Record資料夾中<br>
 ![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ArrivingLateRecordFragment_afterDeleting.jpg) <br>
