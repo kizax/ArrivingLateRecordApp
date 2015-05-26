@@ -37,9 +37,9 @@ Ex.<br>
 
 <br>
 5. 按下儲存按鈕，則會將遲到紀錄儲存至Arriving Late Record資料夾中<br>
-![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ArrivingLateRecordFragment_afterDeleting.jpg) <br>
+ <br>
 
  <br>
  遲到紀錄xls檔案示意圖<br>
-![alt tag](https://raw.githubusercontent.com/kizax/ArrivingLateRecordApp/master/res/picture/ArrivingLateRecordFile.jpg) <br>
+<br>
 <br>
